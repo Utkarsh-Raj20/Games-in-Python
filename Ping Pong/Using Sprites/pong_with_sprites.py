@@ -182,22 +182,61 @@ class Options:
         global opponent_speed, ball_speed, start_game
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0]==1:
-                if self.val == 'EASY':
-                    start_game = True
-                elif self.val == 'MEDIUM':
-                    opponent_speed = 7
-                    ball_speed = 9
-                    start_game = True
-                elif self.val == 'HARD':
-                    opponent_speed = 8
-                    ball_speed = 9
-                    start_game = True
+            if pygame.mouse.get_pressed()[0] == 1:
+                if self.val == "EASY":
+                    game_state.state = 'easy_game'
+                elif self.val == "MEDIUM":
+                    game_state.state = 'med_game'
+                elif self.val == "HARD":
+                    game_state.state = 'hard_game'
 
         pygame.draw.rect(WIN, (59, 59, 209), self.rect)
         WIN.blit(self.text, self.text_rect)
 
 
+class GameState:
+    def __init__(self) -> None:
+        self.state = 'menu'
+    
+    def start_game(self):
+        if self.state == 'menu':
+            self.menu()
+        elif self.state == 'easy_game':
+            self.easy_game()
+        elif self.state == 'med_game':
+            self.med_game()
+        elif self.state == 'hard_game':
+            self.hard_game()
+
+    def menu(self):
+        WIN.fill(bg_color)
+        easy.draw()
+        medium.draw()
+        hard.draw()
+        cursor.update()
+        pygame.display.flip()
+    
+    def easy_game(self):
+        pygame.draw.rect(WIN, accent_color, middle_strip)
+        cursor.update()
+        game_manager.run_game()
+
+    def med_game(self):
+        global FPS
+        opponent.speed = 9
+        FPS = 140
+        pygame.draw.rect(WIN, accent_color, middle_strip)
+        cursor.update()
+        game_manager.run_game()
+
+    def hard_game(self):
+        global FPS
+        opponent.speed = 9
+        player.speed = 3
+        FPS = 160
+        pygame.draw.rect(WIN, accent_color, middle_strip)
+        cursor.update()
+        game_manager.run_game()
 # General Setup
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
@@ -221,14 +260,16 @@ start_game = False
 pygame.mouse.set_visible(False)
 
 
-#level Dependent Variables
+# level Dependent Variables
 
 opponent_speed = 5
+player_speed = 5
 ball_speed = 4
+FPS = 120
 
 # Game Objects
 player = Player(
-    "Games in Python/Ping Pong/Using Sprites/paddle.png", WIDTH - 20, HEIGHT / 2, 5
+    "Games in Python/Ping Pong/Using Sprites/paddle.png", WIDTH - 20, HEIGHT / 2, player_speed
 )
 opponent = Opponent(
     "Games in Python/Ping Pong/Using Sprites/paddle.png", 20, WIDTH / 2, opponent_speed
@@ -253,10 +294,12 @@ game_cursor = Cursor()
 cursor = pygame.sprite.GroupSingle()
 cursor.add(game_cursor)
 
-#Options
-easy = Options("EASY", WIDTH/2-112,241)
-medium = Options("MEDIUM", WIDTH/2-112,365)
-hard = Options("HARD", WIDTH/2-112,489)
+# # Options
+easy = Options("EASY", WIDTH / 2 - 112, 241)
+medium = Options("MEDIUM", WIDTH / 2 - 112, 365)
+hard = Options("HARD", WIDTH / 2 - 112, 489)
+
+game_state = GameState()
 
 
 while True:
@@ -270,10 +313,10 @@ while True:
                 player.movement -= player.speed
             if event.key == pygame.K_DOWN:
                 player.movement += player.speed
-            if event.key == pygame.K_ESCAPE and start_game == True:
-                start_game = False
-            if event.key == pygame.K_ESCAPE and start_game == False:
-                start_game = True
+            # if event.key == pygame.K_ESCAPE and start_game == True:
+            #     start_game = False
+            # if event.key == pygame.K_ESCAPE and start_game == False:
+            #     start_game = True
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
@@ -283,17 +326,17 @@ while True:
 
     # Background Stuff
     WIN.fill(bg_color)
-    if start_game:
-        pygame.draw.rect(WIN, accent_color, middle_strip)
-        game_manager.run_game()
-    else:
-        easy.draw()
-        medium.draw()
-        hard.draw()
-        cursor.update()
-    # Run the game
-    # game_manager.run_game()
+    # if start_game:
+    #     pygame.draw.rect(WIN, accent_color, middle_strip)
+    #     game_manager.run_game()
+    # else:
+    #     easy.draw()
+    #     medium.draw()
+    #     hard.draw()
+    #     cursor.update()
+
+    game_state.start_game()
 
     # Rendering
     pygame.display.flip()
-    clock.tick(120)
+    clock.tick(FPS)
