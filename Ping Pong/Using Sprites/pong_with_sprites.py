@@ -135,10 +135,10 @@ class Game_Manager:
         self.draw_score()
 
     def reset_ball(self):
-        if self.ball_group.sprite.rect.right >= WIDTH:
+        if self.ball_group.sprite.rect.left >= WIDTH:
             self.opponent_score += 1
             self.ball_group.sprite.reset_ball()
-        if self.ball_group.sprite.rect.left <= 0:
+        if self.ball_group.sprite.rect.right <= 0:
             self.player_score += 1
             self.ball_group.sprite.reset_ball()
 
