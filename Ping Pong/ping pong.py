@@ -8,7 +8,7 @@ HEIGHT = 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pong")
 
-FPS = 40
+FPS = 90
 White = (255, 255, 255)
 VEL = 7
 
@@ -116,15 +116,15 @@ def ball_reset():
     ball.center = (WIDTH / 2, HEIGHT / 2)
 
     if current_time - score_time < 700:
-        number_three = game_font.render("3", False, light_grey)
+        number_three = game_font.render("3", True, light_grey)
         WIN.blit(number_three, (WIDTH / 2 - 7, HEIGHT / 2 + 20))
 
     if 700 < current_time - score_time < 1400:
-        number_two = game_font.render("2", False, light_grey)
+        number_two = game_font.render("2", True, light_grey)
         WIN.blit(number_two, (WIDTH / 2 - 7, HEIGHT / 2 + 20))
 
     if 1400 < current_time - score_time < 2100:
-        number_one = game_font.render("1", False, light_grey)
+        number_one = game_font.render("1", True, light_grey)
         WIN.blit(number_one, (WIDTH / 2 - 7, HEIGHT / 2 + 20))
 
     if current_time - score_time < 2100:
