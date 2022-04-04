@@ -33,11 +33,18 @@ class Opponent(Block):
         self.x = x_pos
 
     def update(self, ball_group):
-        if self.rect.top < ball_group.sprite.rect.y:
-            self.rect.y += self.speed
-        if self.rect.bottom > ball_group.sprite.rect.y:
-            self.rect.y -= self.speed
-        self.constrain()
+        if game_state.state == "hard_game" or game_state.state == "med_game":
+            if self.rect.center[1] < ball_group.sprite.rect.y:
+                self.rect.y += self.speed
+            if self.rect.center[1] > ball_group.sprite.rect.y:
+                self.rect.y -= self.speed
+            self.constrain()
+        else:
+            if self.rect.top < ball_group.sprite.rect.y:
+                self.rect.y += self.speed
+            if self.rect.bottom > ball_group.sprite.rect.y:
+                self.rect.y -= self.speed
+            self.constrain()
 
     def constrain(self):
         if self.rect.top <= 0:
@@ -89,13 +96,14 @@ class Ball(Block):
             if paddle.x == 20:
                 paddle.rect.center = (20, HEIGHT / 2)
             else:
-                paddle.rect.center = (WIDTH - 2, HEIGHT / 2)
+                paddle.rect.center = (WIDTH - 20, HEIGHT / 2)
         self.active = False
         self.speed_x *= random.choice((-1, 1))
         self.speed_y *= random.choice((-1, 1))
         self.score_time = pygame.time.get_ticks()
         self.rect.center = (WIDTH / 2, HEIGHT / 2)
-        pygame.mixer.Sound.play(score_sound)
+        if started > 1:
+            pygame.mixer.Sound.play(score_sound)
 
     def restart_counter(self):
         current_time = pygame.time.get_ticks()
@@ -135,10 +143,10 @@ class Game_Manager:
         self.draw_score()
 
     def reset_ball(self):
-        if self.ball_group.sprite.rect.right >= WIDTH:
+        if self.ball_group.sprite.rect.left >= WIDTH:
             self.opponent_score += 1
             self.ball_group.sprite.reset_ball()
-        if self.ball_group.sprite.rect.left <= 0:
+        if self.ball_group.sprite.rect.right <= 0:
             self.player_score += 1
             self.ball_group.sprite.reset_ball()
 
@@ -159,7 +167,7 @@ class Cursor(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
         self.cursor_image = pygame.image.load(
-            "Games in Python/Ping Pong/Using Sprites/cursor.png"
+            "Games in Python/Ping Pong/Using Sprites/assets/cursor.png"
         )
         self.cursor = pygame.transform.scale(self.cursor_image, (27, 27))
         self.cursor_rect = self.cursor.get_rect()
@@ -182,20 +190,95 @@ class Options:
         global opponent_speed, ball_speed, start_game
         pos = pygame.mouse.get_pos()
         if self.rect.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0]==1:
-                if self.val == 'EASY':
-                    start_game = True
-                elif self.val == 'MEDIUM':
-                    opponent_speed = 7
-                    ball_speed = 9
-                    start_game = True
-                elif self.val == 'HARD':
-                    opponent_speed = 8
-                    ball_speed = 9
-                    start_game = True
+            if pygame.mouse.get_pressed()[0] == 1:
+                if self.val == "EASY":
+                    game_state.state = "easy_game"
+                elif self.val == "MEDIUM":
+                    game_state.state = "med_game"
+                elif self.val == "HARD":
+                    game_state.state = "hard_game"
 
         pygame.draw.rect(WIN, (59, 59, 209), self.rect)
         WIN.blit(self.text, self.text_rect)
+
+
+class GameState:
+    def __init__(self) -> None:
+        self.state = "menu"
+
+    def start_game(self):
+        if self.state == "menu":
+            self.menu()
+        elif self.state == "easy_game":
+            self.easy_game()
+        elif self.state == "med_game":
+            self.med_game()
+        elif self.state == "hard_game":
+            self.hard_game()
+
+    def menu(self):
+        WIN.fill(bg_color)
+        WIN.blit(menu_head, menu_head_rect)
+        easy.draw()
+        medium.draw()
+        hard.draw()
+        cursor.update()
+        pygame.display.flip()
+
+    def easy_game(self):
+        global created, FPS, started
+        if created:
+            create_ball()
+            ball.reset_ball()
+            started = 2
+            created = False
+        FPS = 110
+        pygame.draw.rect(WIN, accent_color, middle_strip)
+        cursor.update()
+        game_manager.run_game()
+
+    def med_game(self):
+        global FPS, ball_speed, created, started
+        opponent.speed = 8
+        if created:
+            create_ball()
+            ball.reset_ball()
+            started = 2
+            created = False
+        FPS = 140
+        pygame.draw.rect(WIN, accent_color, middle_strip)
+        cursor.update()
+        game_manager.run_game()
+
+    def hard_game(self):
+        global FPS, ball_speed, created, started
+        opponent.speed = 10
+        if created:
+            create_ball()
+            ball.reset_ball()
+            started = 2
+            created = False
+        ball_speed = 20
+        FPS = 170
+        pygame.draw.rect(WIN, accent_color, middle_strip)
+        cursor.update()
+        game_manager.run_game()
+
+
+def create_ball():
+    global ball, ball_sprite, game_manager
+    ball = Ball(
+        "Games in Python/Ping Pong/Using Sprites/assets/ball.png",
+        WIDTH / 2,
+        HEIGHT / 2,
+        4,
+        4,
+        paddle_group,
+    )
+    ball_sprite = pygame.sprite.GroupSingle()
+    ball_sprite.add(ball)
+
+    game_manager = Game_Manager(ball_sprite, paddle_group)
 
 
 # General Setup
@@ -209,54 +292,62 @@ HEIGHT = 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pong")
 
+created = True
+started = 1
+
 # Global Variables
 bg_color = pygame.Color("#2f373f")
 accent_color = (27, 35, 43)
 game_font = pygame.font.Font("freesansbold.ttf", 32)
-menu_font = pygame.font.Font("Games in Python/Ping Pong/Using Sprites/Arcade_N.ttf", 32)
-hit_sound = pygame.mixer.Sound("Games in Python/Ping Pong/Using Sprites/hit.wav")
-score_sound = pygame.mixer.Sound("Games in Python/Ping Pong/Using Sprites/score.wav")
+menu_font = pygame.font.Font(
+    "Games in Python/Ping Pong/Using Sprites/assets/Arcade_N.ttf", 32
+)
+hit_sound = pygame.mixer.Sound("Games in Python/Ping Pong/Using Sprites/assets/hit.wav")
+score_sound = pygame.mixer.Sound(
+    "Games in Python/Ping Pong/Using Sprites/assets/score.wav"
+)
 middle_strip = pygame.Rect(WIDTH / 2 - 2, 0, 4, HEIGHT)
 start_game = False
 pygame.mouse.set_visible(False)
 
 
-#level Dependent Variables
+# level Dependent Variables
 
 opponent_speed = 5
-ball_speed = 4
+FPS = 110
 
 # Game Objects
 player = Player(
-    "Games in Python/Ping Pong/Using Sprites/paddle.png", WIDTH - 20, HEIGHT / 2, 5
+    "Games in Python/Ping Pong/Using Sprites/assets/paddle.png",
+    WIDTH - 20,
+    HEIGHT / 2,
+    5,
 )
 opponent = Opponent(
-    "Games in Python/Ping Pong/Using Sprites/paddle.png", 20, WIDTH / 2, opponent_speed
+    "Games in Python/Ping Pong/Using Sprites/assets/paddle.png",
+    20,
+    HEIGHT / 2,
+    opponent_speed,
 )
 paddle_group = pygame.sprite.Group()
 paddle_group.add(player)
 paddle_group.add(opponent)
 
-ball = Ball(
-    "Games in Python/Ping Pong/Using Sprites/ball.png",
-    WIDTH / 2,
-    HEIGHT / 2,
-    ball_speed,
-    ball_speed,
-    paddle_group,
-)
-ball_sprite = pygame.sprite.GroupSingle()
-ball_sprite.add(ball)
 
-game_manager = Game_Manager(ball_sprite, paddle_group)
 game_cursor = Cursor()
 cursor = pygame.sprite.GroupSingle()
 cursor.add(game_cursor)
 
-#Options
-easy = Options("EASY", WIDTH/2-112,241)
-medium = Options("MEDIUM", WIDTH/2-112,365)
-hard = Options("HARD", WIDTH/2-112,489)
+
+menu_head = menu_font.render("Difficulty", True, (68, 152, 252))
+menu_head_rect = menu_head.get_rect(center=(WIDTH / 2, 150))
+
+# # Options
+easy = Options("EASY", WIDTH / 2 - 112, 241)
+medium = Options("MEDIUM", WIDTH / 2 - 112, 365)
+hard = Options("HARD", WIDTH / 2 - 112, 489)
+
+game_state = GameState()
 
 
 while True:
@@ -270,10 +361,10 @@ while True:
                 player.movement -= player.speed
             if event.key == pygame.K_DOWN:
                 player.movement += player.speed
-            if event.key == pygame.K_ESCAPE and start_game == True:
-                start_game = False
-            if event.key == pygame.K_ESCAPE and start_game == False:
-                start_game = True
+            if event.key == pygame.K_ESCAPE:
+                game_state.state = "menu"
+                created = True
+                started = 1
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
@@ -283,17 +374,9 @@ while True:
 
     # Background Stuff
     WIN.fill(bg_color)
-    if start_game:
-        pygame.draw.rect(WIN, accent_color, middle_strip)
-        game_manager.run_game()
-    else:
-        easy.draw()
-        medium.draw()
-        hard.draw()
-        cursor.update()
-    # Run the game
-    # game_manager.run_game()
+
+    game_state.start_game()
 
     # Rendering
     pygame.display.flip()
-    clock.tick(120)
+    clock.tick(FPS)
