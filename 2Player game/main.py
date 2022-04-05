@@ -17,17 +17,17 @@ RED_HIT = pygame.USEREVENT + 1
 YELLOW_HIT = pygame.USEREVENT + 2
 
 BULLET_FIRE_SOUND = pygame.mixer.Sound(
-    "Python/Projects/Pygame/2Player game/assets/Gun+Silencer.mp3"
+    "assets/Gun+Silencer.mp3"
 )
 BULLET_HIT_SOUND = pygame.mixer.Sound(
-    "Python/Projects/Pygame/2Player game/assets/Grenade+1.mp3"
+    "assets/Grenade+1.mp3"
 )
 
 FONT = pygame.font.SysFont("comicsans", 40)
 WINNER_FONT = pygame.font.SysFont("comicsans", 100)
 
 YELLOW_SPACESHIP_IMAGE = pygame.image.load(
-    "Python/Projects/Pygame/2Player game/assets/spaceship_yellow.png"
+    "assets/spaceship_yellow.png"
 )
 YELLOW_SPACESHIP = pygame.transform.rotate(
     pygame.transform.scale(YELLOW_SPACESHIP_IMAGE, (55, 40)), 90
@@ -35,12 +35,12 @@ YELLOW_SPACESHIP = pygame.transform.rotate(
 
 
 RED_SPACESHIP_IMAGE = pygame.image.load(
-    "Python/Projects/Pygame/2Player game/assets/spaceship_red.png"
+    "assets/spaceship_red.png"
 )
 RED_SPACESHIP = pygame.transform.rotate(
     pygame.transform.scale(RED_SPACESHIP_IMAGE, (55, 40)), 270
 )
-SPACE_IMAGE = pygame.image.load("Python/Projects/Pygame/2Player game/assets/space.png")
+SPACE_IMAGE = pygame.image.load("assets/space.png")
 SPACE = pygame.transform.scale(SPACE_IMAGE, (WIDTH, HEIGHT))
 
 
@@ -50,9 +50,11 @@ def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_hea
     WIN.blit(YELLOW_SPACESHIP, (yellow.x, yellow.y))
     WIN.blit(RED_SPACESHIP, (red.x, red.y))
 
-    health_of_yellow = FONT.render("HEALTH: " + str(yellow_health), 1, (255, 255, 255))
+    health_of_yellow = FONT.render(
+        "HEALTH: " + str(yellow_health), 1, (255, 255, 255))
     WIN.blit(health_of_yellow, (0, 0))
-    health_of_red = FONT.render("HEALTH: " + str(red_health), 1, (255, 255, 255))
+    health_of_red = FONT.render(
+        "HEALTH: " + str(red_health), 1, (255, 255, 255))
     WIN.blit(health_of_red, (641, 0))
 
     for bullet in red_bullets:
@@ -64,24 +66,24 @@ def draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_hea
 
 
 def handle_yellow_movement(key_pressed, yellow):
-    if key_pressed[pygame.K_a] and yellow.x > 0:  #!Left
+    if key_pressed[pygame.K_a] and yellow.x > 0:  # !Left
         yellow.x -= VEL
-    if key_pressed[pygame.K_d] and yellow.x < 405:  #!Right
+    if key_pressed[pygame.K_d] and yellow.x < 405:  # !Right
         yellow.x += VEL
-    if key_pressed[pygame.K_w] and yellow.y > 0:  #!Up
+    if key_pressed[pygame.K_w] and yellow.y > 0:  # !Up
         yellow.y -= VEL
-    if key_pressed[pygame.K_s] and yellow.y < 441:  #!Down
+    if key_pressed[pygame.K_s] and yellow.y < 441:  # !Down
         yellow.y += VEL
 
 
 def handle_red_movement(key_pressed, red):
-    if key_pressed[pygame.K_LEFT] and red.x > 455:  #!Left
+    if key_pressed[pygame.K_LEFT] and red.x > 455:  # !Left
         red.x -= VEL
-    if key_pressed[pygame.K_RIGHT] and red.x < 860:  #!Right
+    if key_pressed[pygame.K_RIGHT] and red.x < 860:  # !Right
         red.x += VEL
-    if key_pressed[pygame.K_UP] and red.y > 0:  #!Up
+    if key_pressed[pygame.K_UP] and red.y > 0:  # !Up
         red.y -= VEL
-    if key_pressed[pygame.K_DOWN] and red.y < 441:  #!Down
+    if key_pressed[pygame.K_DOWN] and red.y < 441:  # !Down
         red.y += VEL
 
 
@@ -147,7 +149,8 @@ def main():
                     BULLET_FIRE_SOUND.play()
 
                 if event.key == pygame.K_RCTRL and len(red_bullets) < MAX_BULLETS:
-                    Bullet = pygame.Rect(red.x, red.y + red.height / 2 - 2, 10, 5)
+                    Bullet = pygame.Rect(
+                        red.x, red.y + red.height / 2 - 2, 10, 5)
                     red_bullets.append(Bullet)
                     BULLET_FIRE_SOUND.play()
 
@@ -170,7 +173,8 @@ def main():
         handle_yellow_movement(key_pressed, yellow)
         handle_red_movement(key_pressed, red)
         handle_bullets(yellow_bullets, red_bullets, yellow, red)
-        draw_window(red, yellow, red_bullets, yellow_bullets, red_health, yellow_health)
+        draw_window(red, yellow, red_bullets, yellow_bullets,
+                    red_health, yellow_health)
     main()
 
 

@@ -1,4 +1,6 @@
-import pygame, sys, random
+import pygame
+import sys
+import random
 
 
 class Block(pygame.sprite.Sprite):
@@ -118,8 +120,10 @@ class Ball(Block):
         if current_time - self.score_time >= 2100:
             self.active = True
 
-        time_counter = game_font.render(str(countdown_number), True, accent_color)
-        time_counter_rect = time_counter.get_rect(center=(WIDTH / 2, HEIGHT / 2 + 50))
+        time_counter = game_font.render(
+            str(countdown_number), True, accent_color)
+        time_counter_rect = time_counter.get_rect(
+            center=(WIDTH / 2, HEIGHT / 2 + 50))
         pygame.draw.rect(WIN, bg_color, time_counter_rect)
         WIN.blit(time_counter, time_counter_rect)
 
@@ -151,10 +155,13 @@ class Game_Manager:
             self.ball_group.sprite.reset_ball()
 
     def draw_score(self):
-        player_score = game_font.render(str(self.player_score), True, accent_color)
-        opponent_score = game_font.render(str(self.opponent_score), True, accent_color)
+        player_score = game_font.render(
+            str(self.player_score), True, accent_color)
+        opponent_score = game_font.render(
+            str(self.opponent_score), True, accent_color)
 
-        player_score_rect = player_score.get_rect(midleft=(WIDTH / 2 + 40, HEIGHT / 2))
+        player_score_rect = player_score.get_rect(
+            midleft=(WIDTH / 2 + 40, HEIGHT / 2))
         opponent_score_rect = opponent_score.get_rect(
             midright=(WIDTH / 2 - 40, HEIGHT / 2)
         )
@@ -167,7 +174,7 @@ class Cursor(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
         self.cursor_image = pygame.image.load(
-            "Games in Python/Ping Pong/Using Sprites/assets/cursor.png"
+            "assets/cursor.png"
         )
         self.cursor = pygame.transform.scale(self.cursor_image, (27, 27))
         self.cursor_rect = self.cursor.get_rect()
@@ -268,7 +275,7 @@ class GameState:
 def create_ball():
     global ball, ball_sprite, game_manager
     ball = Ball(
-        "Games in Python/Ping Pong/Using Sprites/assets/ball.png",
+        "assets/ball.png",
         WIDTH / 2,
         HEIGHT / 2,
         4,
@@ -300,11 +307,11 @@ bg_color = pygame.Color("#2f373f")
 accent_color = (27, 35, 43)
 game_font = pygame.font.Font("freesansbold.ttf", 32)
 menu_font = pygame.font.Font(
-    "Games in Python/Ping Pong/Using Sprites/assets/Arcade_N.ttf", 32
+    "assets/Arcade_N.ttf", 32
 )
-hit_sound = pygame.mixer.Sound("Games in Python/Ping Pong/Using Sprites/assets/hit.wav")
+hit_sound = pygame.mixer.Sound("assets/hit.wav")
 score_sound = pygame.mixer.Sound(
-    "Games in Python/Ping Pong/Using Sprites/assets/score.wav"
+    "assets/score.wav"
 )
 middle_strip = pygame.Rect(WIDTH / 2 - 2, 0, 4, HEIGHT)
 start_game = False
@@ -318,13 +325,13 @@ FPS = 110
 
 # Game Objects
 player = Player(
-    "Games in Python/Ping Pong/Using Sprites/assets/paddle.png",
+    "assets/paddle.png",
     WIDTH - 20,
     HEIGHT / 2,
     5,
 )
 opponent = Opponent(
-    "Games in Python/Ping Pong/Using Sprites/assets/paddle.png",
+    "assets/paddle.png",
     20,
     HEIGHT / 2,
     opponent_speed,

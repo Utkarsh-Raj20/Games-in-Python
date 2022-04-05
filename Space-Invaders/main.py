@@ -11,22 +11,22 @@ screen = pygame.display.set_mode((800, 600))
 
 # *title and icon
 pygame.display.set_caption("Space Invaders")
-icon = pygame.image.load("Python/Projects/Pygame/Space-Invaders/assets/player.png")
+icon = pygame.image.load("assets/player.png")
 pygame.display.set_icon(icon)
 
 # *Background
 background = pygame.image.load(
-    "Python/Projects/Pygame/Space-Invaders/assets/background.png"
+    "assets/background.png"
 )
 
 # *Background sound
-mixer.music.load("Python/Projects/Pygame/Space-Invaders/assets/background.wav")
+mixer.music.load("assets/background.wav")
 mixer.music.play(-1)
 
 
 # *player
 player_img = pygame.image.load(
-    "Python/Projects/Pygame/Space-Invaders/assets/player.png"
+    "assets/player.png"
 )
 playerX = 370
 playerY = 480
@@ -42,16 +42,16 @@ enemyY_change = []
 enemyX_change = []
 
 enemy_img[0] = pygame.image.load(
-    "Python/Projects/Pygame/Space-Invaders/assets/enemy1.png"
+    "assets/enemy1.png"
 )
 enemy_img[1] = pygame.image.load(
-    "Python/Projects/Pygame/Space-Invaders/assets/enemy2.png"
+    "assets/enemy2.png"
 )
 enemy_img[2] = pygame.image.load(
-    "Python/Projects/Pygame/Space-Invaders/assets/enemy3.png"
+    "assets/enemy3.png"
 )
 enemy_img[3] = pygame.image.load(
-    "Python/Projects/Pygame/Space-Invaders/assets/enemy4.png"
+    "assets/enemy4.png"
 )
 
 for i in range(num_of_enemies):
@@ -63,7 +63,7 @@ for i in range(num_of_enemies):
 
 # *bullet
 bullet_img = pygame.image.load(
-    "Python/Projects/Pygame/Space-Invaders/assets/bullet.png"
+    "assets/bullet.png"
 )
 bulletX = playerX
 bulletY = 480
@@ -71,12 +71,12 @@ bulletY_change = 10
 bullet_state = "ready"
 
 # * Font
-font = pygame.font.Font("Python/Projects/Pygame/Space-Invaders/assets/Kickback.ttf", 64)
+font = pygame.font.Font("assets/Kickback.ttf", 64)
 fontX = 10
 fontY = 10
 
 over_font = pygame.font.Font(
-    "Python/Projects/Pygame/Space-Invaders/assets/Kickback.ttf", 64
+    "assets/Kickback.ttf", 64
 )
 
 
@@ -136,7 +136,7 @@ while running:
                 playerX_change = 5
             if event.key == pygame.K_SPACE and bullet_state == "ready":
                 bullet_sound = mixer.Sound(
-                    "Python/Projects/Pygame/Space-Invaders/assets/laser.wav"
+                    "assets/laser.wav"
                 )
                 bulletX = playerX
                 fire_bullet(bulletX, bulletY)
@@ -175,7 +175,7 @@ while running:
         collision = isCollision(enemyX[i], enemyY[i], bulletY, bulletX)
         if collision:
             explosion = mixer.Sound(
-                "Python/Projects/Pygame/Space-Invaders/assets/explosion.wav"
+                "assets/explosion.wav"
             )
             bulletY = 480
             bullet_state = "ready"
@@ -197,4 +197,3 @@ while running:
     player(playerX, playerY)
     show_score(fontX, fontY, score)
     pygame.display.update()
-    

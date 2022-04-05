@@ -8,43 +8,43 @@ HEIGHT = 512
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Flappy Bird")
 pygame.display.set_icon(
-    pygame.image.load("Python/Projects/Pygame/Flappy Bird/assets/yellowbird-upflap.png")
+    pygame.image.load("assets/yellowbird-upflap.png")
 )
 FPS = 60
 
-WING = pygame.mixer.Sound("Python/Projects/Pygame/Flappy Bird/audio/wing.ogg")
-HIT = pygame.mixer.Sound("Python/Projects/Pygame/Flappy Bird/audio/hit.ogg")
-POINT = pygame.mixer.Sound("Python/Projects/Pygame/Flappy Bird/audio/point.ogg")
+WING = pygame.mixer.Sound("audio/wing.ogg")
+HIT = pygame.mixer.Sound("audio/hit.ogg")
+POINT = pygame.mixer.Sound("audio/point.ogg")
 
 BACKGROUND_DAY = pygame.image.load(
-    "Python/Projects/Pygame/Flappy Bird/assets/background-day.png"
+    "assets/background-day.png"
 )
-GAME_OVER = pygame.image.load("Python/Projects/Pygame/Flappy Bird/assets/gameover.png")
-BASE = pygame.image.load("Python/Projects/Pygame/Flappy Bird/assets/base.png")
-MENU = pygame.image.load("Python/Projects/Pygame/Flappy Bird/assets/message.png")
+GAME_OVER = pygame.image.load("assets/gameover.png")
+BASE = pygame.image.load("assets/base.png")
+MENU = pygame.image.load("assets/message.png")
 
 YELLOW_BIRD_UPFLAP = pygame.image.load(
-    "Python/Projects/Pygame/Flappy Bird/assets/yellowbird-upflap.png"
+    "assets/yellowbird-upflap.png"
 )
 YELLOW_BIRD_MIDFLAP = pygame.image.load(
-    "Python/Projects/Pygame/Flappy Bird/assets/yellowbird-midflap.png"
+    "assets/yellowbird-midflap.png"
 )
 YELLOW_BIRD_DOWNFLAP = pygame.image.load(
-    "Python/Projects/Pygame/Flappy Bird/assets/yellowbird-downflap.png"
+    "assets/yellowbird-downflap.png"
 )
 YELLOW_BIRD = [YELLOW_BIRD_UPFLAP, YELLOW_BIRD_MIDFLAP, YELLOW_BIRD_DOWNFLAP]
 
-PIPE_IMG = pygame.image.load("Python/Projects/Pygame/Flappy Bird/assets/pipe-green.png")
+PIPE_IMG = pygame.image.load("assets/pipe-green.png")
 INVERTED_PIPE_IMG = pygame.image.load(
-    "Python/Projects/Pygame/Flappy Bird/assets/pipe-green-inverted.png"
+    "assets/pipe-green-inverted.png"
 )
 
 BIRD_FLAP = pygame.USEREVENT
 pygame.time.set_timer(BIRD_FLAP, 150)
 
 BIRD_HIT = pygame.USEREVENT + 1
-font = pygame.font.Font("Python/Projects/Pygame/Flappy Bird/assets/04B_19.ttf", 64)
-font2 = pygame.font.Font("Python/Projects/Pygame/Flappy Bird/assets/04B_19.ttf", 30)
+font = pygame.font.Font("assets/04B_19.ttf", 64)
+font2 = pygame.font.Font("assets/04B_19.ttf", 30)
 
 
 class Pipe:
@@ -53,19 +53,24 @@ class Pipe:
         self.y = random.randint(200, 380)
         self.width = 40
         self.height = 320
-        self.rectangle_down = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.rectangle_up = pygame.Rect(self.x, self.y - 420, self.width, self.height)
+        self.rectangle_down = pygame.Rect(
+            self.x, self.y, self.width, self.height)
+        self.rectangle_up = pygame.Rect(
+            self.x, self.y - 420, self.width, self.height)
 
     def draw(self):
-        self.rectangle_down = pygame.Rect(self.x, self.y, self.width, self.height)
-        self.rectangle_up = pygame.Rect(self.x, self.y - 420, self.width, self.height)
+        self.rectangle_down = pygame.Rect(
+            self.x, self.y, self.width, self.height)
+        self.rectangle_up = pygame.Rect(
+            self.x, self.y - 420, self.width, self.height)
 
         WIN.blit(PIPE_IMG, (self.rectangle_down.x, self.rectangle_down.y))
         WIN.blit(INVERTED_PIPE_IMG, (self.rectangle_up.x, self.rectangle_up.y))
 
 
 def draw_window(base_x, bird, n, BIRD_MOVEMENT, pipe1, pipe2, pipe3, score):
-    rotated_bird = pygame.transform.rotozoom(YELLOW_BIRD[n], BIRD_MOVEMENT * -10, 1)
+    rotated_bird = pygame.transform.rotozoom(
+        YELLOW_BIRD[n], BIRD_MOVEMENT * -10, 1)
 
     WIN.blit(BACKGROUND_DAY, (0, 0))
     WIN.blit(rotated_bird, (bird.x, bird.y))
@@ -93,7 +98,7 @@ def handle_collision(bird, pipe1, pipe2, pipe3):
 def show_gameover(high_score, score):
 
     if score > high_score:
-        with open("Python/Projects/Pygame/Flappy Bird/High Score.txt", "w") as f:
+        with open("High Score.txt", "w") as f:
             f.write(str(score))
 
     WIN.blit(GAME_OVER, (WIDTH / 2 - 192 / 2, HEIGHT / 2 - 42 / 2))
@@ -104,7 +109,7 @@ def show_gameover(high_score, score):
 
 
 def getHighScore():
-    with open("Python/Projects/Pygame/Flappy Bird/High Score.txt", "r") as f:
+    with open("High Score.txt", "r") as f:
         return f.read()
 
 
@@ -203,7 +208,8 @@ def main():
                 pipe3.y = random.randint(200, 380)
 
             handle_collision(bird, pipe1, pipe2, pipe3)
-            draw_window(base_x, bird, n, BIRD_MOVEMENT, pipe1, pipe2, pipe3, score)
+            draw_window(base_x, bird, n, BIRD_MOVEMENT,
+                        pipe1, pipe2, pipe3, score)
             pygame.display.update()
     pygame.display.quit()
 
