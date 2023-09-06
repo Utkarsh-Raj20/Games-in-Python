@@ -1,6 +1,9 @@
 import pygame
 import random
 
+
+# this is a new comment (feature 1)
+
 pygame.init()
 
 WIDTH = 288
