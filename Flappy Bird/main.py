@@ -13,7 +13,7 @@ pygame.display.set_caption("Flappy Bird")
 pygame.display.set_icon(
     pygame.image.load("assets/yellowbird-upflap.png")
 )
-FPS = 60
+FPS = 80
 
 WING = pygame.mixer.Sound("audio/wing.ogg")
 HIT = pygame.mixer.Sound("audio/hit.ogg")
@@ -57,7 +57,7 @@ class Pipe:
         self.width = 40
         self.height = 320
         self.rectangle_down = pygame.Rect(
-            self.x, self.y, self.width, self.height)
+        self.x, self.y, self.width, self.height)
         self.rectangle_up = pygame.Rect(
             self.x, self.y - 420, self.width, self.height)
 
@@ -121,7 +121,7 @@ def main():
 
     base_x = 0
     run = True
-    n = 0
+    n = 1
 
     score = 0
     speed = 1
@@ -179,13 +179,13 @@ def main():
                     HIT.play()
                     show_gameover(high_score, score)
 
-            if bird.x == pipe1.x + 52:
+            if bird.x == pipe1.x + 60:
                 POINT.play()
                 score += 1
-            if bird.x == pipe2.x + 52:
+            if bird.x == pipe2.x + 60:
                 POINT.play()
                 score += 1
-            if bird.x == pipe3.x + 52:
+            if bird.x == pipe3.x + 60:
                 POINT.play()
                 score += 1
 
@@ -195,18 +195,18 @@ def main():
             if base_x <= -50:
                 base_x = 0
 
-            pipe1.x -= speed
-            if pipe1.x < -52:
+            pipe1.x -=  speed 
+            if pipe1.x < -60:
                 pipe1.x = 360
                 pipe1.y = random.randint(200, 380)
 
-            pipe2.x -= speed
-            if pipe2.x < -52:
+            pipe2.x -=  speed 
+            if pipe2.x < -60:
                 pipe2.x = 360
                 pipe2.y = random.randint(200, 380)
 
-            pipe3.x -= speed
-            if pipe3.x < -52:
+            pipe3.x -=  speed 
+            if pipe3.x < -60:#52
                 pipe3.x = 360
                 pipe3.y = random.randint(200, 380)
 
